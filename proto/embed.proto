@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package embed;
+
+// Embedder services are transformer models capable of generator vector
+// embeddings to support tasks like semantic search, QA & clustering.
+service Embedder {
+    // Embed generates a vector embedding.
+    rpc Embed (EmbedRequest) returns (EmbedResponse) {}
+}
+
+message EmbedRequest {
+    string body = 1;
+}
+
+message EmbedResponse {
+    string body = 1;
+}
+

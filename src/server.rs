@@ -1,26 +1,28 @@
 use tonic::{transport::Server, Request, Response, Status};
 
-use hello_world::embedder_client::{Greeter, GreeterServer};
-use hello_world::{HelloReply, HelloRequest};
+use embed::embedder_client::EmbedderClient;
+use embed::embedder_server::Embedder;
+use embed::{EmbedRequest, EmbedResponse};
 
-pub mod hello_world {
-    tonic::include_proto!("hello");
+pub mod embed {
+    tonic::include_proto!("embed");
 }
 
-#[derive(Default)]
-pub struct MyGreeter {}
+#[derive(Default, Clone)]
+pub struct DefaultEmbedder {}
 
 #[tonic::async_trait]
-impl Greeter for MyGreeter {
-    async fn say_hello(
+impl Embedder for DefaultEmbedder {
+    async fn embed(
         &self,
-        request: Request<HelloRequest>,
-    ) -> Result<Response<HelloReply>, Status> {
+        request: Request<EmbedRequest>,
+    ) -> Result<Response<EmbedResponse>, Status> {
         println!("Got a request from {:?}", request.remote_addr());
 
-        let reply = hello_world::HelloReply {
-            message: format!("Hello {}!", request.into_inner().name),
+        let reply = embed::EmbedResponse {
+            body: format!("Hello {}!", request.into_inner().body),
         };
+
         Ok(Response::new(reply))
     }
 }
@@ -28,12 +30,12 @@ impl Greeter for MyGreeter {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let addr = "[::1]:50051".parse().unwrap();
-    let greeter = MyGreeter::default();
+    let embedder = DefaultEmbedder::default();
 
     println!("GreeterServer listening on {}", addr);
 
     Server::builder()
-        .add_service(GreeterServer::new(greeter))
+        .add_service(EmbedderClient::new(embedder))
         .serve(addr)
         .await?;
 
