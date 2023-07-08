@@ -1,3 +1,3 @@
 pub mod embed;
 
-pub use embed::*;
+pub use self::embed::*;
