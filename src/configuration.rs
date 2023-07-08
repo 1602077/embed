@@ -2,9 +2,23 @@ use config::ConfigError;
 
 #[derive(Debug, serde::Deserialize)]
 pub struct Settings {
+    pub server: ServerSettings,
+}
+
+#[derive(Debug, serde::Deserialize)]
+pub struct ServerSettings {
     pub address: String,
     pub port: u16,
+    pub log: LogSettings,
     pub embedder: EmbedSettings,
+}
+
+#[derive(Debug, serde::Deserialize)]
+pub struct LogSettings {
+    pub name: String,
+    // TODO: convert to more strict typing
+    pub level: String,
+    pub json: bool,
 }
 
 #[derive(Debug, serde::Deserialize)]

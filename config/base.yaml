@@ -1,5 +1,8 @@
-address: "[::1]"
-port: 50051
-embedder:
-  impl: "transformer"
-  model: "all-mpnet-base-v2"
+server:
+  address: "[::1]"
+  port: 50051
+  embedder:
+    impl: "transformer"
+    model: "all-mpnet-base-v2"
+  log:
+    name: "embedding-server"
