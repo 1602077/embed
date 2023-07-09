@@ -20,7 +20,8 @@ pub fn init_tracing<Sink>(
         let fmt_layer = fmt::layer()
             .with_file(true)
             .with_line_number(true)
-            .with_target(false);
+            .with_target(false)
+            .with_writer(sink);
 
         let subscriber = tracing_subscriber::registry()
             .with(env_filter)
