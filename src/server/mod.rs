@@ -1,2 +1,4 @@
+pub mod application;
 pub mod models;
-pub mod startup;
+
+pub use application::Application;

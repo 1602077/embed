@@ -10,10 +10,12 @@ service Embedder {
 }
 
 message EmbedRequest {
-    string body = 1;
+    string id = 1;
+    string body = 2;
 }
 
 message EmbedResponse {
-    string body = 1;
+    string id = 1;
+    string body = 2;
 }
 

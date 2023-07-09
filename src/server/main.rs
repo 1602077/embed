@@ -1,5 +1,5 @@
 use embed::configuration::get_config;
-use embed::server::startup::Application;
+use embed::server::Application;
 use embed::telemetry::init_tracing;
 
 #[tokio::main]

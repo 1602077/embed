@@ -1,6 +1,7 @@
 use embed_proto::embedder_server::Embedder;
 use embed_proto::{EmbedRequest, EmbedResponse};
 use tonic::{Request, Response, Status};
+use tracing::info;
 
 use crate::configuration::{EmbedSettings, EmbedderType};
 
@@ -14,6 +15,11 @@ impl EmbedAdapter {
     pub fn build(
         config: EmbedSettings,
     ) -> Result<impl Embedder, std::io::Error> {
+        info!(
+            message = "building embedder",
+            implementation = config.r#impl.as_str(),
+            model = config.model
+        );
         match config.r#impl {
             EmbedderType::Transformer => Ok(Transformer {
                 model: config.model,
@@ -33,10 +39,9 @@ impl Embedder for Transformer {
         &self,
         request: Request<EmbedRequest>,
     ) -> Result<Response<EmbedResponse>, Status> {
-        println!("Got a request from {:?}", request.remote_addr());
-
         let reply = EmbedResponse {
-            body: format!("Hello {}!", request.into_inner().body),
+            id: request.into_inner().id,
+            body: "".into(), // body: format!("Hello {}!", request.into_inner().body),
         };
 
         Ok(Response::new(reply))
