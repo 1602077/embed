@@ -51,7 +51,7 @@ pub struct Transformer {
 
 // TODO: This works although is a rather hacky, as:
 //  - models are pulled live for each request (very bad)
-//  - get this issue  (Cannot drop a runtime in a context where blocking is not allowed) which is
+//  - get this issue (Cannot drop a runtime in a context where blocking is not allowed) which is
 //  resolved which a release build.
 #[tonic::async_trait]
 impl Embedder for Transformer {
@@ -69,7 +69,7 @@ impl Embedder for Transformer {
         let body = &request.get_ref().body;
 
         let vector_embedding =
-            &model.encode(&vec![body]).expect("failed to embed")[0];
+            &model.encode(&[body]).expect("failed to embed")[0];
 
         let embedding = embed_response::Embedding {
             vector: vector_embedding.to_vec(),

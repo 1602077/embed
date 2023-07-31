@@ -11,5 +11,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Build the Docker image
+    - name: docker build
       run: docker build --tag embed:$(date +%s) --build-arg="RUST_BINARY=server" .
