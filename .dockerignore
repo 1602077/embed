@@ -2,6 +2,7 @@
 !proto/
 !src/
 !build.rs
+!.cargo/
 !Cargo.toml
 !Cargo.lock
 # TODO (jack, 09/07/2023): Remove baked in config and mount as a volume in kubernetes instead.

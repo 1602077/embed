@@ -1,4 +1,5 @@
 use std::net::SocketAddr;
+use std::time::Duration;
 
 use tonic::transport::server::Router;
 use tonic::transport::Server;
@@ -22,8 +23,9 @@ impl Application {
 
         let embedder = EmbedAdapter::build(config.embedder)?;
 
-        let router =
-            Server::builder().add_service(EmbedderServer::new(embedder));
+        let router = Server::builder()
+            .timeout(Duration::from_secs(30))
+            .add_service(EmbedderServer::new(embedder));
 
         Ok(Self { address, router })
     }

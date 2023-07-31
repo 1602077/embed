@@ -9,13 +9,18 @@ service Embedder {
     rpc Embed (EmbedRequest) returns (EmbedResponse) {}
 }
 
+
 message EmbedRequest {
     string id = 1;
     string body = 2;
 }
 
 message EmbedResponse {
+    message Embedding {
+        repeated float vector = 1;
+    }
+
     string id = 1;
-    string body = 2;
+    Embedding embedding = 2;
 }
 

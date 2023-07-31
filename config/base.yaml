@@ -3,6 +3,6 @@ server:
   port: 50051
   embedder:
     impl: "transformer"
-    model: "all-mpnet-base-v2"
+    model: "all-mini-lm-l12-v2"
   log:
     name: "embedding-server"
