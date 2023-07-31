@@ -1,4 +1,4 @@
-name: build embed server docker image
+name: build-docker
 
 on:
   push:

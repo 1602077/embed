@@ -1,4 +1,4 @@
-name: ci-test-rust
+name: test-rust
 on:
   push:
     branches: [ "main" ]
@@ -6,6 +6,7 @@ on:
     branches: [ "main" ]
 env:
   CARGO_TERM_COLOR: always
+
 jobs:
   test:
     runs-on: ubuntu-latest
