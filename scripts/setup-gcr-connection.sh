@@ -6,9 +6,9 @@ set -eou pipefail
 
 PROJECT_ID=${PROJECT_ID}
 GITHUB_REPO=${GITHUB_REPO} # username/repo
-SERVICE_ACCOUNT=${SERVICE_ACCOUNT:="github-actions"}
-WORKLOAD_IDENTITY_POOL=${WORKLOAD_IDENTITY_POOL:="github-actions"}
-WORKLOAD_PROVIDER=${WORKLOAD_PROVIDER:="github-actions-provider"}
+SERVICE_ACCOUNT=${SERVICE_ACCOUNT:="github-ci"}
+WORKLOAD_IDENTITY_POOL=${WORKLOAD_IDENTITY_POOL:="github-ci"}
+WORKLOAD_PROVIDER=${WORKLOAD_PROVIDER:="github-ci-provider"}
 
 # create service account and assign artifact registry writer permissions.
 gcloud iam service-accounts create "${SERVICE_ACCOUNT}" \
@@ -20,8 +20,6 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 
 gcloud services enable iamcredentials.googleapis.com --project "${PROJECT_ID}"
 
- create workload identity pool &
-bind service account to it.
 gcloud iam workload-identity-pools create "${WORKLOAD_IDENTITY_POOL}" \
 	--project="${PROJECT_ID}" \
 	--location="global" \
