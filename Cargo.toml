@@ -8,10 +8,6 @@ edition = "2021"
 name = "server"
 path = "src/server/main.rs"
 
-[[bin]]
-name = "client"
-path = "src/client/main.rs"
-
 [dependencies]
 config =  "0.13.3"
 openssl = { version = "0.10.55", features = ["vendored"] }
