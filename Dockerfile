@@ -18,10 +18,10 @@ RUN apt-get update -y && \
     apt-get install -y protobuf-compiler build-essential cmake clang
 
 # install libtorch rust
-RUN wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-1.9.0%2Bcpu.zip -O libtorch.zip && \
+RUN wget https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.0.0%2Bcu118.zip libtorch && \
  unzip -o libtorch.zip
 ENV LIBTORCH /libtorch \
-  LD_LIBRARY_PATH /libtorch/lib:$LD_LIBRARY_PATH
+  LD_LIBRARY_PATH ${LIBTORCH}/lib:$LD_LIBRARY_PATH
 
 WORKDIR /app
 ARG RUST_BINARY="server"
