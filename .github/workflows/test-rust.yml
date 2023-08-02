@@ -1,4 +1,5 @@
 name: test-rust
+
 on:
   push:
     branches: [ "main" ]
@@ -20,10 +21,17 @@ jobs:
       with:
         components: clippy
 
+    - name: install libtorch
+      run: |-
+        wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcpu.zip -O libtorch.zip
+        unzip -o libtorch.zip
+        export LIBTORCH=/libtorch
+        export LD_LIBRARY_PATH=${LIBTORCH}/lib:$LD_LIBRARY_PATH
+
     - name: Linting
       run: cargo clippy -- -D warnings
 
-    - name: Build
+    - name: Build 
       run: cargo build --verbose
 
     - name: Run tests
