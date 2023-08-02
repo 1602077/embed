@@ -1,4 +1,3 @@
-pub mod client;
 pub mod configuration;
 pub mod server;
 pub mod telemetry;

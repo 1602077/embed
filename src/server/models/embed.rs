@@ -87,11 +87,30 @@ pub struct ModelType(SentenceEmbeddingsModelType);
 impl TryFrom<String> for ModelType {
     type Error = String;
     fn try_from(value: String) -> Result<Self, Self::Error> {
+        // TODO: This feels overly verbose, there must be a nicer way of 
+        // extending the rust-bert enum.
         match value.to_lowercase().as_str() {
-            "all-mini-lm-l12-v2" => {
+            "all-mini-lm-l6" => {
+                Ok(ModelType(SentenceEmbeddingsModelType::AllMiniLmL6V2))
+            }
+            "all-mini-lm-l12" => {
                 Ok(ModelType(SentenceEmbeddingsModelType::AllMiniLmL12V2))
             }
-            // TODO: ...
+            "all-distilroberta" => {
+                Ok(ModelType(SentenceEmbeddingsModelType::AllDistilrobertaV1))
+            }
+            "bert-base-nli-mean-tokens" => Ok(ModelType(
+                SentenceEmbeddingsModelType::BertBaseNliMeanTokens,
+            )),
+            "distil-use-base-multilingual-cased" => Ok(ModelType(
+                SentenceEmbeddingsModelType::DistiluseBaseMultilingualCased,
+            )),
+            "paraphrase-albert-small-v2" => Ok(ModelType(
+                SentenceEmbeddingsModelType::ParaphraseAlbertSmallV2,
+            )),
+            "sentence-t5" => {
+                Ok(ModelType(SentenceEmbeddingsModelType::SentenceT5Base))
+            }
             other => {
                 Err(format!("{} is not a supported embedder type.", other))
             }

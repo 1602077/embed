@@ -15,7 +15,7 @@
 
 FROM rust:bookworm as builder
 RUN apt-get update -y && \
-    apt-get install -y protobuf-compiler build-essential
+    apt-get install -y protobuf-compiler build-essential cmake clang
 
 # install libtorch rust
 RUN wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-1.9.0%2Bcpu.zip -O libtorch.zip && \
