@@ -14,12 +14,31 @@ jobs:
     - name: docker build
       run: |-
         docker build \
-          --tag embed:latest \
+          --tag "embed:${{ github.sha }}" \
           --build-arg="RUST_BINARY=server" \
           .
     - name: docker images
       run: docker images
+
     # - name: docker run
-    #   run: docker run embed:$(date +%s)
-    - name: docker run
-      run: docker run embed:latest
+    #   run: docker run "embed:${{ github.sha }}"
+
+    - name: 'authorise gcp'
+      id: 'auth'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        workload_identity_provider: '${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}'
+        service_account: '${{ secrets.GCP_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}'
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+      with:
+        project_id: '${{ env.GCP_PROJECT_ID }}'
+
+    - name: 'Docker auth'
+      run: |-
+        gcloud auth configure-docker ${{ env.GCP_GAR_LOCATION }}-docker.pkg.dev
+
+    - name: 'docker push'
+      run: |-
+         docker push "${{ env.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/embed:${{ github.sha }}"
