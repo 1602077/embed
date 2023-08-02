@@ -16,6 +16,13 @@
 FROM rust:bookworm as builder
 RUN apt-get update -y && \
     apt-get install -y protobuf-compiler build-essential
+
+# install libtorch rust
+RUN wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-1.9.0%2Bcpu.zip -O libtorch.zip && \
+ unzip -o libtorch.zip
+ENV LIBTORCH /libtorch \
+  LD_LIBRARY_PATH /libtorch/lib:$LD_LIBRARY_PATH
+
 WORKDIR /app
 ARG RUST_BINARY="server"
 COPY . .
@@ -25,7 +32,7 @@ RUN cargo build \
 
 # ----------------------------------------------------------------------------
 
-FROM debian:trixie-slim
+FROM debian:bookworm-slim
 ARG RUST_BINARY="server"
 WORKDIR /app
 COPY --from=builder /app/target/release/${RUST_BINARY} /app/entrypoint
