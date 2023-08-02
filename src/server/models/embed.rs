@@ -87,7 +87,7 @@ pub struct ModelType(SentenceEmbeddingsModelType);
 impl TryFrom<String> for ModelType {
     type Error = String;
     fn try_from(value: String) -> Result<Self, Self::Error> {
-        // TODO: This feels overly verbose, there must be a nicer way of 
+        // TODO: This feels overly verbose, there must be a nicer way of
         // extending the rust-bert enum.
         match value.to_lowercase().as_str() {
             "all-mini-lm-l6" => {
