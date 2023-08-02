@@ -36,7 +36,7 @@ RUN cargo build \
 # ARG RUST_BINARY="server"
 ARG RUSTBERT_CACHE="/app/.cache"
 RUN mkdir -p $RUSTBERT_CACHE
-COPY --from=builder /libtorch /libtorch
+# COPY --from=builder /libtorch /libtorch
 
 # WORKDIR /app
 # COPY --from=builder /app/target/release/${RUST_BINARY} /app/entrypoint
@@ -47,5 +47,6 @@ ENV APPLICATION__RUNTIME_ENVIRONMENT=prod \
   LIBTORCH=/libtorch \
   LD_LIBRARY_PATH=${LIBTORCH}/lib:$LD_LIBRARY_PATH
 # CMD ["./entrypoint"]
-CMD ["./target/release/${RUST_BINARY}"]
+RUN /sbin/ldconfig -v
+CMD ["./target/release/server"]
 
