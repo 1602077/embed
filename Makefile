@@ -3,7 +3,9 @@ SHELL=/bin/bash
 
 .PHONY: build
 build: # builds docker image.
-	@docker build --build-arg="RUST_BINARY=server" -t embed-server .
+	@export LIBTORCH=$(brew --cellar pytorch)/$(brew info --json pytorch | jq -r '.[0].installed[0].version')
+	@export LD_LIBRARY_PATH=${LIBTORCH}/lib:$LD_LIBRARY_PATH
+	docker build --build-arg="RUST_BINARY=server" -t embed-server .
 
 .PHONY: server
 server: # run grpc server locally.
