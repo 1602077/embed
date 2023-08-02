@@ -14,10 +14,9 @@ jobs:
     - name: docker build
       run: |-
         docker build \
-          --tag embed:latest \
+        --tag embed:$(date +%s) \ 
+          --tag embed:latest \ 
           --build-arg="RUST_BINARY=server" \
           .
-    # - name: docker run
-    #   run: docker run embed:$(date +%s)
     - name: docker run
       run: docker run embed:latest
