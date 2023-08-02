@@ -32,19 +32,20 @@ RUN cargo build \
 
 # ----------------------------------------------------------------------------
 
-FROM debian:bookworm-slim
-ARG RUST_BINARY="server"
+# FROM debian:bookworm-slim
+# ARG RUST_BINARY="server"
 ARG RUSTBERT_CACHE="/app/.cache"
 RUN mkdir -p $RUSTBERT_CACHE
 COPY --from=builder /libtorch /libtorch
 
-WORKDIR /app
-COPY --from=builder /app/target/release/${RUST_BINARY} /app/entrypoint
-COPY --from=builder /app/config /app/config
-EXPOSE 50051
+# WORKDIR /app
+# COPY --from=builder /app/target/release/${RUST_BINARY} /app/entrypoint
+# COPY --from=builder /app/config /app/config
+# EXPOSE 50051
 ENV APPLICATION__RUNTIME_ENVIRONMENT=prod \
   RUSTBERT_CACHE=${RUSTBERT_CACHE} \
   LIBTORCH=/libtorch \
   LD_LIBRARY_PATH=${LIBTORCH}/lib:$LD_LIBRARY_PATH
-CMD ["./entrypoint"]
+# CMD ["./entrypoint"]
+CMD ["./target/release/${RUST_BINARY}"]
 
