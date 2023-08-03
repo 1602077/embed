@@ -34,8 +34,8 @@ jobs:
     - name: 'docker build & push'
       run: |- 
         docker build \
-          --tag "${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/embed:${{ github.sha }}" \
+          --tag "${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/embed/embed:${{ github.sha }}" \
           --build-arg="RUST_BINARY=server" \
           .
         docker images
-        docker push "${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/embed:${{ github.sha }}"
+        docker push "${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/embed/embed:${{ github.sha }}"
