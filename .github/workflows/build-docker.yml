@@ -17,7 +17,7 @@ jobs:
     - name: docker build
       run: |-
         docker build \
-          --tag "embed:${{ github.sha }}" \
+          --tag "${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/embed:${{ github.sha }}" \
           --build-arg="RUST_BINARY=server" \
           .
     - name: docker images
