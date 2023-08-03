@@ -14,17 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: docker build
-      run: |-
-        docker build \
-          --tag "${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/embed:${{ github.sha }}" \
-          --build-arg="RUST_BINARY=server" \
-          .
-    - name: docker images
-      run: docker images
-
-    # - name: docker run
-    #   run: docker run "embed:${{ github.sha }}"
 
     - name: 'authorise gcp'
       id: 'auth'
@@ -42,6 +31,11 @@ jobs:
       run: |-
         gcloud auth configure-docker "${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev"
 
-    - name: 'docker push'
-      run: |-
-         docker push "${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/embed:${{ github.sha }}"
+    - name: 'docker build & push'
+      run: |- 
+        docker build \
+          --tag "${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/embed:${{ github.sha }}" \
+          --build-arg="RUST_BINARY=server" \
+          .
+        docker images
+        docker push "${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/embed:${{ github.sha }}"
