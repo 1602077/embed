@@ -26,14 +26,15 @@ jobs:
         wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcpu.zip -O libtorch.zip
         unzip -o libtorch.zip
         sudo /sbin/ldconfig -v
+        # Ensures rust binary can discover libtorch.
         pwd
         ls -al
-        echo 'LIBTORCH="home/runner/work/embed/embed/libtorch"' >> "$GITHUB_ENV"
-
-        echo 'LD_LIBRARY_PATH="home/runner/work/embed/embed/libtorch/lib:$LD_LIBRARY_PATH"' >> "$GITHUB_ENV"
+        ls libtorch
+        echo 'LIBTORCH="/home/runner/work/embed/embed/libtorch"' >> "$GITHUB_ENV"
+        echo 'LD_LIBRARY_PATH="/home/runner/work/embed/embed/libtorch/lib:$LD_LIBRARY_PATH"' >> "$GITHUB_ENV"
 
     - name: Linting
-      run: cargo clippy -- -D warnings
+      run: LIBTORCH="${{ env.LIBTORCH }}" LD_LIBRARY_PATH="${{ env.LD_LIBRARY_PATH }}" cargo clippy -- -D warnings
 
     - name: Build 
       run: cargo build --verbose
