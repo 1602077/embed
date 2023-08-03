@@ -44,4 +44,4 @@ jobs:
 
     - name: 'docker push'
       run: |-
-         docker push "${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/embed:${{ github.sha }}"
+         docker push "${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/embed:${{ github.sha }}"
