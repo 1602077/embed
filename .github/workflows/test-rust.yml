@@ -26,8 +26,11 @@ jobs:
         wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcpu.zip -O libtorch.zip
         unzip -o libtorch.zip
         sudo /sbin/ldconfig -v
-        echo "export LIBTORCH=/libtorch" >> "$GITHUB_ENV"
-        echo "export LD_LIBRARY_PATH=${LIBTORCH}/lib:$LD_LIBRARY_PATH" >> "$GITHUB_ENV"
+        pwd
+        ls -al
+        echo 'LIBTORCH="home/runner/work/embed/embed/libtorch"' >> "$GITHUB_ENV"
+
+        echo 'LD_LIBRARY_PATH="home/runner/work/embed/embed/libtorch/lib:$LD_LIBRARY_PATH"' >> "$GITHUB_ENV"
 
     - name: Linting
       run: cargo clippy -- -D warnings
