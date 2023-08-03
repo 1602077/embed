@@ -27,9 +27,6 @@ jobs:
         unzip -o libtorch.zip
         sudo /sbin/ldconfig -v
         # Ensures rust binary can discover libtorch.
-        pwd
-        ls -al
-        ls libtorch
         echo 'LIBTORCH="/home/runner/work/embed/embed/libtorch"' >> "$GITHUB_ENV"
         echo 'LD_LIBRARY_PATH="/home/runner/work/embed/embed/libtorch/lib:$LD_LIBRARY_PATH"' >> "$GITHUB_ENV"
 
@@ -37,10 +34,10 @@ jobs:
       run: LIBTORCH="${{ env.LIBTORCH }}" LD_LIBRARY_PATH="${{ env.LD_LIBRARY_PATH }}" cargo clippy -- -D warnings
 
     - name: Build 
-      run: cargo build --verbose
+      run: LIBTORCH="${{ env.LIBTORCH }}" LD_LIBRARY_PATH="${{ env.LD_LIBRARY_PATH }}" cargo build --verbose
 
     - name: Run tests
-      run: cargo test --verbose
+      run: LIBTORCH="${{ env.LIBTORCH }}" LD_LIBRARY_PATH="${{ env.LD_LIBRARY_PATH }}" cargo test --verbose
 
     - name: Install tarpaulin
       run: cargo install cargo-tarpaulin
