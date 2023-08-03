@@ -5,16 +5,12 @@ use tracing_subscriber::fmt::MakeWriter;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::{fmt, EnvFilter, Registry};
 
-pub fn init_tracing<Sink>(
-    name: String,
-    env_filter: String,
-    json: bool,
-    sink: Sink,
-) where
+pub fn init_tracing<Sink>(name: String, env_filter: String, json: bool, sink: Sink)
+where
     Sink: for<'a> MakeWriter<'a> + Send + Sync + 'static,
 {
-    let env_filter = EnvFilter::try_from_default_env()
-        .unwrap_or_else(|_| EnvFilter::new(env_filter));
+    let env_filter =
+        EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new(env_filter));
 
     if !json {
         let fmt_layer = fmt::layer()

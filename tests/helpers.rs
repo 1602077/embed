@@ -20,8 +20,7 @@ pub async fn run_test_app() -> TestApp {
         c
     };
 
-    let app = Application::build(configuration.server)
-        .expect("failed to build application");
+    let app = Application::build(configuration.server).expect("failed to build application");
     let addr = app.address;
 
     let _ = tokio::spawn(run_until_stopped(app.router, addr));

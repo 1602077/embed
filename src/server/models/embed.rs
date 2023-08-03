@@ -17,9 +17,7 @@ pub mod embed_proto {
 pub struct EmbedAdapter {}
 impl EmbedAdapter {
     #[tracing::instrument(name = "building embedder")]
-    pub fn build(
-        config: EmbedSettings,
-    ) -> Result<impl Embedder, std::io::Error> {
+    pub fn build(config: EmbedSettings) -> Result<impl Embedder, std::io::Error> {
         info!(
             message = "building embedder",
             implementation = config.r#impl.as_str(),
@@ -60,16 +58,14 @@ impl Embedder for Transformer {
         &self,
         request: Request<EmbedRequest>,
     ) -> Result<Response<EmbedResponse>, Status> {
-        let model_type =
-            ModelType::try_from(self.model.clone()).expect("failed").0;
+        let model_type = ModelType::try_from(self.model.clone()).expect("failed").0;
         let model = SentenceEmbeddingsBuilder::remote(model_type)
             .create_model()
             .unwrap();
 
         let body = &request.get_ref().body;
 
-        let vector_embedding =
-            &model.encode(&[body]).expect("failed to embed")[0];
+        let vector_embedding = &model.encode(&[body]).expect("failed to embed")[0];
 
         let embedding = embed_response::Embedding {
             vector: vector_embedding.to_vec(),
@@ -90,15 +86,9 @@ impl TryFrom<String> for ModelType {
         // TODO: This feels overly verbose, there must be a nicer way of
         // extending the rust-bert enum.
         match value.to_lowercase().as_str() {
-            "all-mini-lm-l6" => {
-                Ok(ModelType(SentenceEmbeddingsModelType::AllMiniLmL6V2))
-            }
-            "all-mini-lm-l12" => {
-                Ok(ModelType(SentenceEmbeddingsModelType::AllMiniLmL12V2))
-            }
-            "all-distilroberta" => {
-                Ok(ModelType(SentenceEmbeddingsModelType::AllDistilrobertaV1))
-            }
+            "all-mini-lm-l6" => Ok(ModelType(SentenceEmbeddingsModelType::AllMiniLmL6V2)),
+            "all-mini-lm-l12" => Ok(ModelType(SentenceEmbeddingsModelType::AllMiniLmL12V2)),
+            "all-distilroberta" => Ok(ModelType(SentenceEmbeddingsModelType::AllDistilrobertaV1)),
             "bert-base-nli-mean-tokens" => Ok(ModelType(
                 SentenceEmbeddingsModelType::BertBaseNliMeanTokens,
             )),
@@ -108,12 +98,8 @@ impl TryFrom<String> for ModelType {
             "paraphrase-albert-small-v2" => Ok(ModelType(
                 SentenceEmbeddingsModelType::ParaphraseAlbertSmallV2,
             )),
-            "sentence-t5" => {
-                Ok(ModelType(SentenceEmbeddingsModelType::SentenceT5Base))
-            }
-            other => {
-                Err(format!("{} is not a supported embedder type.", other))
-            }
+            "sentence-t5" => Ok(ModelType(SentenceEmbeddingsModelType::SentenceT5Base)),
+            other => Err(format!("{} is not a supported embedder type.", other)),
         }
     }
 }

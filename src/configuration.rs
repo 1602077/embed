@@ -47,9 +47,7 @@ impl TryFrom<String> for EmbedderType {
     fn try_from(s: String) -> Result<Self, Self::Error> {
         match s.to_lowercase().as_str() {
             "transformer" => Ok(Self::Transformer),
-            other => {
-                Err(format!("{} is not a supported embedder type.", other))
-            }
+            other => Err(format!("{} is not a supported embedder type.", other)),
         }
     }
 }
@@ -65,11 +63,10 @@ pub fn get_config() -> Result<Settings, ConfigError> {
     let base_path = std::env::current_dir().expect("failed to determine cwd");
     let configuration_directory = base_path.join("config");
 
-    let environment: Environment =
-        std::env::var("APPLICATION__RUNTIME_ENVIRONMENT")
-            .unwrap_or_else(|_| "local".into())
-            .try_into()
-            .expect("Failed to parse APPLICATION__RUNTIME_ENVIRONMENT.");
+    let environment: Environment = std::env::var("APPLICATION__RUNTIME_ENVIRONMENT")
+        .unwrap_or_else(|_| "local".into())
+        .try_into()
+        .expect("Failed to parse APPLICATION__RUNTIME_ENVIRONMENT.");
 
     let environment_filename = format!("{}.yaml", environment.as_str());
 
