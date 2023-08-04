@@ -1,3 +1,10 @@
+# Runs cargo [lint, build, test] and generates code coverage stats.
+#
+# Libtorch is installed manually and its paths are explicitly set in each step.
+#
+# The `download-libtorch` feature of `rust-bert` is not used to mirror how
+# everything is setup in the docker build.
+#
 name: test-rust
 
 on:
@@ -15,11 +22,11 @@ jobs:
     - name: Install Protoc
       uses: arduino/setup-protoc@v2
 
-    - uses: actions/checkout@v3
-
     - uses: dtolnay/rust-toolchain@stable
       with:
         components: clippy
+
+    - uses: actions/checkout@v3
 
     - name: install libtorch
       run: |-
@@ -43,7 +50,7 @@ jobs:
       run: cargo install cargo-tarpaulin
 
     - name: Generate code coverage
-      run: cargo tarpaulin --verbose --workspace
+      run: LIBTORCH="${{ env.LIBTORCH }}" LD_LIBRARY_PATH="${{ env.LD_LIBRARY_PATH }}" cargo tarpaulin --verbose --workspace
 
 
   fmt:
