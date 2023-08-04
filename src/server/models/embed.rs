@@ -1,7 +1,9 @@
+use std::sync::{Arc, Mutex};
+
 use embed_proto::embedder_server::Embedder;
 use embed_proto::{EmbedRequest, EmbedResponse};
 use rust_bert::pipelines::sentence_embeddings::{
-    SentenceEmbeddingsBuilder, SentenceEmbeddingsModelType,
+    SentenceEmbeddingsBuilder, SentenceEmbeddingsModel, SentenceEmbeddingsModelType,
 };
 use tonic::{Request, Response, Status};
 use tracing::info;
@@ -12,6 +14,8 @@ use crate::configuration::{EmbedSettings, EmbedderType};
 pub mod embed_proto {
     tonic::include_proto!("embed");
 }
+
+// TODO: anyhow error handling and try to remove lazy unwraps.
 
 #[derive(Debug)]
 pub struct EmbedAdapter {}
@@ -24,48 +28,38 @@ impl EmbedAdapter {
             model = config.model
         );
         match config.r#impl {
-            EmbedderType::Transformer => Ok(Transformer {
-                model: config.model,
-            }),
+            EmbedderType::Transformer => {
+                let model = ModelType::try_from(config.model).unwrap().0;
+                let model = SentenceEmbeddingsBuilder::remote(model)
+                    .create_model()
+                    .unwrap();
+                Ok(Transformer {
+                    model: Arc::new(Mutex::new(model)),
+                })
+            }
         }
     }
 }
 
-#[derive(Default, Clone, Debug)]
 pub struct Transformer {
-    pub model: String,
-    // pub model: Arc<SentenceEmbeddingsModel>,
+    pub model: Arc<Mutex<SentenceEmbeddingsModel>>,
 }
-// impl Transformer {
-//     pub fn new(model: String) -> Result<Self, String> {
-//         let model_type = ModelType::try_from(model)?.0;
-//         let model =
-//             SentenceEmbeddingsBuilder::remote(model_type).create_model()?;
-//         Ok(Transformer {
-//             model: Arc::clone(&model),
-//         })
-//     }
-// }
 
-// TODO: This works although is a rather hacky, as:
-//  - models are pulled live for each request (very bad)
-//  - get this issue (Cannot drop a runtime in a context where blocking is not allowed) which is
-//  resolved which a release build.
 #[tonic::async_trait]
 impl Embedder for Transformer {
-    #[tracing::instrument(name = "embedding request recieved")]
+    #[tracing::instrument(name = "embedding request recieved", skip(self))]
     async fn embed(
         &self,
         request: Request<EmbedRequest>,
     ) -> Result<Response<EmbedResponse>, Status> {
-        let model_type = ModelType::try_from(self.model.clone()).expect("failed").0;
-        let model = SentenceEmbeddingsBuilder::remote(model_type)
-            .create_model()
-            .unwrap();
-
         let body = &request.get_ref().body;
 
-        let vector_embedding = &model.encode(&[body]).expect("failed to embed")[0];
+        let vector_embedding = &self
+            .model
+            .lock()
+            .unwrap()
+            .encode(&[body])
+            .expect("failed to embed")[0];
 
         let embedding = embed_response::Embedding {
             vector: vector_embedding.to_vec(),
