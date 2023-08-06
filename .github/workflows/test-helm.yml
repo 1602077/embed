@@ -1,0 +1,26 @@
+# Runs helmfile lint to check for valid helm config.
+name: test-helm
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "deploy/helm/**"
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: install helmfile
+      run: |-
+        apt install helm helmfile
+
+    - name: helmfile lint
+      run: |-
+        cd ./deploy && helmfile lint
+
+
