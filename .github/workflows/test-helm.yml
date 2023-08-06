@@ -4,8 +4,6 @@ name: test-helm
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - "deploy/helm/**"
   pull_request:
     branches: [ "main" ]
 
@@ -15,9 +13,18 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: install helm
+      run: |-
+        curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+        sudo apt-get install apt-transport-https --yes
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+        sudo apt -y update && sudo apt -y install helm
+
     - name: install helmfile
       run: |-
-        apt install helm helmfile
+        wget "https://github.com/helmfile/helmfile/releases/download/v0.155.1/helmfile_0.155.1_linux_amd64.tar.gz"
+        tar xvf helmfile_0.155.1_linux_amd64.tar.gz
+        sudo mv helmfile /usr/local/bin/
 
     - name: helmfile lint
       run: |-
