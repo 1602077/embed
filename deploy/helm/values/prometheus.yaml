@@ -1,3 +1,4 @@
+## non-default values for prometheus
 prometheus-pushgateway:
   persistentVolume:
     size: 10Gi

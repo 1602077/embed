@@ -1,3 +1,7 @@
+# helmfile allows for a declarative management of helm charts, their override
+# values and environment specific config (in-lieu of using argo).
+
+
 # environments allows for environment specific config to be abstracted outside
 # of each helm chart's value override file and namespaced by environment and
 # chart.
