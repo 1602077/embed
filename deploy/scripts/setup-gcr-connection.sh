@@ -1,8 +1,11 @@
 #!/bin/bash
-# create workload identity pool for github actions connection to artifact
-# registry & gke.
-#
-set -eou pipefail
+# Creates workload identity pool for GitHub actions connection to artefact
+# registry & GKE. Eventually this would be set-up by terraform.
+cd "${0%/*}"
+
+. ./common/check-env.sh
+. ./common/error.sh
+. ./common/print.sh
 
 PROJECT_ID=${PROJECT_ID}
 GITHUB_REPO=${GITHUB_REPO} # username/repo
@@ -53,4 +56,4 @@ WORKLOAD_IDENITY_PROVIDER_ID=$(
 		--format="value(name)"
 )
 
-echo -e ">> pool created with provider '${WORKLOAD_IDENITY_PROVIDER_ID}'"
+print-header "identity pool created with provider '${WORKLOAD_IDENITY_PROVIDER_ID}'"

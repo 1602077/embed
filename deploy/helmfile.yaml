@@ -1,0 +1,64 @@
+# helmfile allows for a declarative management of helm charts, their override
+# values and environment specific config (in-lieu of using argo).
+
+
+# environments allows for environment specific config to be abstracted outside
+# of each helm chart's value override file and namespaced by environment and
+# chart.
+#
+# To config grafana alerts in the production environment edit
+# `./environments/prod.yaml` with:
+# ```yaml
+# grafana:
+#   alertmanager: {}
+# ```
+environments:
+  dev:
+    values:
+    - ./environments/dev.yaml
+---
+lockFilePath: .helmfile.{{ .Environment.Name}}.lock
+
+# default template merges values from override file per chart and from the
+# environment file.
+templates:
+  default: &default
+    values:
+    - ./values/{{`{{ .Release.Name }}`}}.yaml
+    - &env env.gotmpl
+
+repositories:
+  - name: grafana
+    url: https://grafana.github.io/helm-charts
+
+  - name: istio
+    url: https://istio-release.storage.googleapis.com/charts
+
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
+
+releases:
+  - name: grafana
+    namespace: monitoring
+    version: 6.58.7
+    chart: grafana/grafana
+    <<: *default
+
+  - name: istio-base
+    namespace: istio-system
+    version: 1.18.2
+    chart: istio/base
+    <<: *default
+
+  - name: istiod
+    namespace: istio-system
+    version: 1.18.2
+    chart: istio/istiod
+    <<: *default
+
+  - name: prometheus
+    namespace: monitoring
+    version: 23.2.0
+    chart: prometheus-community/prometheus
+    <<: *default
+
