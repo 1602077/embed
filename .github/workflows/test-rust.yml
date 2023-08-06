@@ -10,8 +10,18 @@ name: test-rust
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "proto/**"
+
   pull_request:
     branches: [ "main" ]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "proto/**"
+
 env:
   CARGO_TERM_COLOR: always
 
