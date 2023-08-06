@@ -1,0 +1,4 @@
+## non-default values for istiod
+pilot:
+  # istio recommends at least two istiod for a production setup.
+  autoscaleMin: 2
