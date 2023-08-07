@@ -22,9 +22,9 @@ fullnameOverride: ""
 ## auto-scaling configuration for embed serving deployment.
 #
 autoscaling:
-  autoscaling.knative.dev/min-scale: 1
-  autoscaling.knative.dev/max-scale: 10
-  autoscaling.knative.dev/target: 4
+  autoscaling.knative.dev/min-scale: "1"
+  autoscaling.knative.dev/max-scale: "10"
+  autoscaling.knative.dev/target: "4"
 
 service:
   ## port is the exposed port of the knative service.
