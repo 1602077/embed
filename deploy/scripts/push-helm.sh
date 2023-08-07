@@ -11,16 +11,27 @@ cd "${0%/*}"
 # Override helm environment as necessary with environment variable.
 HELMFILE_ENV=${HELMFILE_ENV:=dev}
 
-print-header "deploying helm charts with $HELMFILE_ENV environment configuration"
+print-header "deploying helm charts with $HELMFILE_ENV environment configuration, tier: architecture"
 
 check-env
 
 (
 	cd .. # i.e. root of './deploy'.
 	helmfile -e "$HELMFILE_ENV" deps
-	helmfile -e $HELMFILE_ENV sync
+	helmfile -e $HELMFILE_ENV sync --selector tier=architecture
 )
 
 ./install-knative.sh
+
+# TODO: waiting for knative to be healthy
+
+print-header "deploying helm charts with $HELMFILE_ENV environment configuration, tier: application"
+
+check-env
+
+(
+	cd .. # i.e. root of './deploy'.
+	helmfile -e $HELMFILE_ENV sync --selector tier=application
+)
 
 print-header "base cluster environment configured"

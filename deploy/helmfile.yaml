@@ -42,18 +42,24 @@ releases:
     namespace: monitoring
     version: 6.58.7
     chart: grafana/grafana
+    labels:
+      tier: architecture
     <<: *default
 
   - name: istio-base
     namespace: istio-system
     version: 1.18.2
     chart: istio/base
+    labels:
+      tier: architecture
     <<: *default
 
   - name: istiod
     namespace: istio-system
     version: 1.18.2
     chart: istio/istiod
+    labels:
+      tier: architecture
     needs:
       - istio-system/istio-base
     <<: *default
@@ -62,11 +68,15 @@ releases:
     namespace: monitoring
     version: 23.2.0
     chart: prometheus-community/prometheus
+    labels:
+      tier: architecture
     <<: *default
 
   - name: embed
     namespace: models
     chart: ./charts/app/
+    labels:
+      tier: application
     <<: *default
     set:
       - name: image.repository
