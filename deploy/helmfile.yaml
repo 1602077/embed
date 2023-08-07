@@ -54,6 +54,8 @@ releases:
     namespace: istio-system
     version: 1.18.2
     chart: istio/istiod
+    needs:
+      - istio-system/istio-base
     <<: *default
 
   - name: prometheus
