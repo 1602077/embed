@@ -54,6 +54,8 @@ releases:
     namespace: istio-system
     version: 1.18.2
     chart: istio/istiod
+    needs:
+      - istio-system/istio-base
     <<: *default
 
   - name: prometheus
@@ -62,3 +64,10 @@ releases:
     chart: prometheus-community/prometheus
     <<: *default
 
+  - name: embed
+    namespace: models
+    chart: ./charts/app/
+    <<: *default
+    set:
+      - name: image.repository
+        value: {{ requiredEnv "EMBED_IMAGE_REPOSITORY" }}

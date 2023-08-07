@@ -16,3 +16,5 @@ check-env
 kubectl apply -f "https://github.com/knative/serving/releases/download/knative-v${KNATIVE_VERSION}/serving-crds.yaml"
 kubectl apply -f "https://github.com/knative/serving/releases/download/knative-v${KNATIVE_VERSION}/serving-core.yaml"
 kubectl apply -f "https://github.com/knative/net-istio/releases/download/knative-v${KNATIVE_VERSION}/net-istio.yaml"
+
+# TODO: Configuration of knative global feature maps to enable node selectors and security profiles etc.
