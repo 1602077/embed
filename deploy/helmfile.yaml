@@ -64,3 +64,10 @@ releases:
     chart: prometheus-community/prometheus
     <<: *default
 
+  - name: embed
+    namespace: models
+    chart: ./charts/app/
+    <<: *default
+    set:
+      - name: image.repository
+        value: {{ requiredEnv "EMBED_IMAGE_REPOSITORY" }}

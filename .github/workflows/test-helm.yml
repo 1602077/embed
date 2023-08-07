@@ -32,6 +32,6 @@ jobs:
 
     - name: helmfile lint
       run: |-
-        cd ./deploy && helmfile lint
+        cd ./deploy && EMBED_IMAGE_REPOSITORY=embed:latest helmfile lint
 
 
