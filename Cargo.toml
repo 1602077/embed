@@ -10,7 +10,7 @@ path = "src/server/main.rs"
 
 [dependencies]
 config =  "0.13.3"
-openssl = { version = "0.10.55", features = ["vendored"] }
+openssl = { version = "0.10.60", features = ["vendored"] }
 prost = "0.11.9"
 rust-bert = { version = "0.21.0" }
 serde = "1.0.177"
